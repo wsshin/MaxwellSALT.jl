@@ -1,5 +1,30 @@
 export DirectMaxwellData
 
+# To do:
+#
+# We can create a similar type that reduces the number of factorization.  During the Newton
+# iteration for solving the nonlinear equation, the matrix changes only diagonally.
+# Furthermore, this diagonal change is parametrized by ω.  Therefore, we can perform
+# factorization only once at a single ω, and use the idea of fast frequency sweep for other
+# ω's.  Because γ(ω) has a pole, we may need to use the Padé approximation instead of the
+# simple power series expansion, for which γ(ω) will generate infinitely many terms because
+# γ(ω) is infinitely differentiable.
+#
+# A simiar idea cannot be applied to solving the lasing equation, where the diagonal change
+# involves a change in the hole-burning term and is not parametrized by the scalar ω.
+# However, we may construct a new parametrized matrix for each hole-burning term, by fixing
+# the hole burning term and changing only ω.  The downside of this is that the coefficients
+# of the series expansion of the solution needs to be calculated for every ω.  (For the
+# nonlasing equation, this needed to be calculated only once for varying ω during the Newton
+# iteration...  Is this right?  This is correct when both A and b are parametrized by ω, but
+# in our case b is probably not, so this may not be correct.)  However, if the major
+# performance improvement comes from the reduced number of factorizations rather than the
+# reduced number of linear solves, this scheme should still have a huge benefit.
+#
+# However, all these ideas become irrelevant for 3D problems, where linear systems will be
+# solved iteratively and therefore no factorization will be performed.  Hence, implementing
+# the above ideas is not a priority.
+
 mutable struct DirectMaxwellData{MC<:AbsMatComplex,F<:FactComplex} <: LinearSolverData
     CC::MC  # double curl operator ∇ × μ⁻ ¹∇ ×
     A::MC  # Maxwell operator
