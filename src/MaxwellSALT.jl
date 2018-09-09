@@ -6,6 +6,7 @@ using LinearAlgebra
 using SparseArrays: SparseMatrixCSC
 using SuiteSparse.UMFPACK: UmfpackLU
 
+# Below, use Int instead of Int64 for compatibility with 32-bit systems (e.g., x86 in appveyor.yml).
 const Float = typeof(0.0)  # use Float = Float128 for quadruple precision in the future
 const CFloat = Complex{Float}
 
@@ -20,7 +21,7 @@ const AbsVecNumber = AbsVec{<:Number}
 const AbsMatNumber = AbsMat{<:Number}
 
 const MatComplex = Matrix{CFloat}
-const SparseMatComplex = SparseMatrixCSC{CFloat,Int64}
+const SparseMatComplex = SparseMatrixCSC{CFloat,Int}
 
 const FactComplex = Factorization{CFloat}
 
