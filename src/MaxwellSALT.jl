@@ -24,7 +24,7 @@ const SparseMatComplex = SparseMatrixCSC{CFloat,Int64}
 
 const FactComplex = Factorization{CFloat}
 
-const SparseLUComplex = UmfpackLU{CFloat,Int64}
+const SparseLUComplex = UmfpackLU{CFloat,Int}
 const DenseLUComplex = LU{CFloat,MatComplex}
 
 include("direct.jl")
