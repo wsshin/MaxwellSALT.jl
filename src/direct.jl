@@ -56,23 +56,23 @@ function SALTBase.init_lsd!(lsd::DirectMaxwellData, ω::Number, ε::AbsVecNumber
     mA==nε || throw(ArgumentError("size(lsd.A,1) = $mA and length(ε) = $nε must be the same."))
 
     lsd.A .= lsd.CC  # initialize; works for sparse matrices with same nonzero entry pattern
-    # info("‖CC‖₁ = $(norm(CC,1)), ω = $ω, ‖ε‖ = $(norm(ε))")
+    # @info "‖CC‖₁ = $(opnorm(CC,1)), ω = $ω, ‖ε‖ = $(norm(ε))"
     for i = 1:nε
         lsd.A[i,i] -= ω^2 * ε[i]
     end
 
-    lsd.fact = lufact(lsd.A)
+    lsd.fact = lu(lsd.A)
 
     return nothing
 end
 
 # Later, we can store the factorization of A in DirectMaxwellData and reuse it.
 function SALTBase.linsolve!(x::AbsVecComplex, lsd::DirectMaxwellData, b::AbsVecComplex)
-    A_ldiv_B!(x, lsd.fact, b)
+    ldiv!(x, lsd.fact, b)
 end
 
 function SALTBase.linsolve_transpose!(x::AbsVecComplex, lsd::DirectMaxwellData, b::AbsVecComplex)
-    At_ldiv_B!(x, lsd.fact, b)
+    ldiv!(x, transpose(lsd.fact), b)
 end
 
 function SALTBase.linapply!(b::AbsVecComplex, lsd::DirectMaxwellData, x::AbsVecComplex)
