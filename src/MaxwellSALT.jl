@@ -15,6 +15,7 @@ const AbsMat = AbstractMatrix
 const AbsVecComplex = AbsVec{CFloat}
 const AbsMatComplex = AbsMat{CFloat}
 
+const AbsVecReal = AbsVec{<:Real}
 const AbsVecNumber = AbsVec{<:Number}
 const AbsMatNumber = AbsMat{<:Number}
 
@@ -27,5 +28,6 @@ const SparseLUComplex = UmfpackLU{CFloat,Int64}
 const DenseLUComplex = LU{CFloat,MatComplex}
 
 include("direct.jl")
+include("gainobj.jl")
 
 end # module
