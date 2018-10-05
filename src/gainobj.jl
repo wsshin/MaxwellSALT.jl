@@ -30,6 +30,7 @@ function assign_pumpstr!(D₀::AbsVecReal,  # output vector to write on (reshape
                          d::Real,  # pump parameter at which D₀ is evaluated
                          N::SVector{3,Int},  # size of output 3D array
                          l::MaxwellFDM.Tuple23{AbsVecReal})  # l[PRIM][k], l[DUAL][k]: primal, dual vertex locations in k-direction
+    D₀ .= 0  # initialize (pump strength is nonzero only inside gain media)
     D₀array = reshape(D₀, 3, N.data...)
     gt = PRIM
     gt_cmp₀ = SVector(gt, gt, gt)
