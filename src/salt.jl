@@ -86,6 +86,7 @@ MaxwellFDM.add_obj!(s::SALT, matname::String, ε::MatParam, shapes::Shape...) = 
 MaxwellFDM.add_obj!(s::SALT, matname::String, ε::MatParam, shapes::AbsVec{<:Shape}) = add_obj!(s.m, matname, ε, shapes)
 
 #= Getters delegating to Maxwell =#
+MaxwellFDM.get_grid(s::SALT) = get_grid(s.m)
 MaxwellFDM.get_dblcurl(s::SALT) = get_dblcurl(s.m)
 
 function get_εcold(s::SALT)
@@ -105,7 +106,7 @@ set_gainparam!(s::SALT, ω₀::Real, γperp::Real) = (s.ω₀ = ω₀; s.γperp 
 
 function get_gainprofile(s::SALT)
     if ~isdefined(s, :gp)
-        g = get_grid(s.m)
+        g = get_grid(s)
         N = 3*prod(g.N)
         s.gp = GainProfile(s.ω₀, s.γperp, N)
     end
@@ -139,7 +140,7 @@ function get_nonlasingvar(s::SALT)
     if ~isdefined(s, :nlvar)
         lsd = get_maxwelldata(s)
 
-        g = get_grid(s.m)
+        g = get_grid(s)
         N = 3*prod(g.N)
         M = length(s.ωguess)
 
@@ -151,7 +152,7 @@ end
 
 function get_lasingsol(s::SALT)
     if ~isdefined(s, :lsol)
-        g = get_grid(s.m)
+        g = get_grid(s)
         N = 3*prod(g.N)
         M = length(s.ωguess)
 
@@ -165,7 +166,7 @@ function get_lasingvar(s::SALT)
     if ~isdefined(s, :lvar)
         lsd = get_maxwelldata(s)
 
-        g = get_grid(s.m)
+        g = get_grid(s)
         N = 3*prod(g.N)
         M = length(s.ωguess)
 
@@ -201,7 +202,7 @@ function simulate!(s::SALT,
                    τa_anderson::Real=TA_ANDERSON,  # absolute tolerance
                    maxit_anderson::Integer=typemax(Int),  # maximum number of Anderson iteration steps
                    verbose::Bool=true)
-    g = get_grid(s.m)
+    g = get_grid(s)
     setD₀!(gp::GainProfile, d::Real) = assign_pumpstr!(get_gainprofile(s).D₀, s.gobj_vec, d, g.N, g.l)
 
     # Return, as functions of d, the followings:
