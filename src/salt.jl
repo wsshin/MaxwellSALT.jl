@@ -33,8 +33,8 @@
 # qualification (the latter).
 
 export SALT
-export get_εcold, set_gainparam!, set_initguess!, get_nonlasingsol, get_lasingsol,
-       add_gainobj!, simulate!
+export set_pmlfreq!, get_εcold, set_gainparam!, set_initguess!, get_nonlasingsol,
+       get_lasingsol, add_gainobj!, simulate!
 
 mutable struct SALT
     m::Maxwell
@@ -85,6 +85,25 @@ MaxwellFDM.set_background!(s::SALT, matname::String, ε::MatParam) = set_backgro
 MaxwellFDM.add_obj!(s::SALT, matname::String, ε::MatParam, shapes::Shape...) = add_obj!(s.m, matname, ε, shapes...)
 MaxwellFDM.add_obj!(s::SALT, matname::String, ε::MatParam, shapes::AbsVec{<:Shape}) = add_obj!(s.m, matname, ε, shapes)
 
+# Note that the sign of ω flips below.  This is to account for the different time-dependence
+# convention between SALTBase (exp(-iωt)) and MaxwellFDM (exp(+iωt)).
+#
+# What is really done to obtain the physicist's Maxwell's equations from the engineer's
+# Maxwell's equations is to take the complex conjugate of the entire equations.  This makes
+# the time dependence from exp(+iωt) to conj{exp(+i ω_eng t)} = exp(-i conj(ω_eng) t). This
+# is why we use the conjugated frequency ω_phy = conj(ω_eng) in SALT.
+#
+# The PML formula is embedded inside Maxwell's equations, so it is also affected by the
+# conjugation.  It turns out that i appears only in the form of iω_eng, and all the other PML
+# parameters except for ω_eng are real.  Therefore, the PML formula for SALT is obtained by
+# using -i instead of i and conj(ω_eng) instead of ω_eng.
+#
+# In SALT, we are already using conj(ω_eng) = ω_phy, so we only need to flip the sign of i
+# in order to optain the PML formula for the SALT equation.  Because i appears only in the
+# form of iω in the PML formula, this can be achieved by inputting -ω_phy in MaxwellFDM's
+# PML formula.
+set_pmlfreq!(s::SALT, ω::Number) = set_freq!(s.m, -ω)
+
 #= Getters delegating to Maxwell =#
 MaxwellFDM.get_grid(s::SALT) = get_grid(s.m)
 MaxwellFDM.get_dblcurl(s::SALT) = get_dblcurl(s.m)
@@ -102,7 +121,7 @@ end
 
 # Below, the minus sign is introduced because MaxwellFDM assumes the exp(+iωt) time
 # dependence, whereas SALTBase assumes the exp(-iωt) time dependence.
-set_gainparam!(s::SALT, ω₀::Real, γperp::Real) = (s.ω₀ = ω₀; s.γperp = γperp; set_freq!(s.m, -ω₀))
+set_gainparam!(s::SALT, ω₀::Real, γperp::Real) = (s.ω₀ = ω₀; s.γperp = γperp; return nothing)
 
 function get_gainprofile(s::SALT)
     if ~isdefined(s, :gp)
@@ -125,7 +144,7 @@ function get_maxwelldata(s::SALT)
     return s.lsd
 end
 
-set_initguess!(s::SALT, ωguess::AbsVecNumber, Ψguess::AbsMatComplex) = (s.ωguess = ωguess; s.Ψguess = Ψguess)
+set_initguess!(s::SALT, ωguess::AbsVecNumber, Ψguess::AbsMatComplex) = (s.ωguess = ωguess; s.Ψguess = Ψguess; return nothing)
 
 function get_nonlasingsol(s::SALT)
     if ~isdefined(s, :nlsol)
