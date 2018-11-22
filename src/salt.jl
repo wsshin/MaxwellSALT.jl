@@ -45,6 +45,7 @@ mutable struct SALT
     # Gain parameters
     ω₀::Union{Real,AbsVecReal}
     γperp::Union{Real,AbsVecReal}
+    wt::AbsVecReal
     gp::GainProfile
 
     # Gain objects
@@ -122,13 +123,18 @@ end
 
 # Below, the minus sign is introduced because MaxwellFDM assumes the exp(+iωt) time
 # dependence, whereas SALTBase assumes the exp(-iωt) time dependence.
-set_gainparam!(s::SALT, ω₀::Union{Real,AbsVecReal}, γperp::Union{Real,AbsVecReal}) = (s.ω₀ = ω₀; s.γperp = γperp; return nothing)
+set_gainparam!(s::SALT, ω₀::Real, γperp::Real) = (s.ω₀ = ω₀; s.γperp = γperp; return nothing)
+set_gainparam!(s::SALT, ω₀::AbsVecReal, γperp::AbsVecReal, wt::AbsVecReal) = (s.ω₀ = ω₀; s.γperp = γperp; s.wt = wt; return nothing)
 
 function get_gainprofile(s::SALT)
     if ~isdefined(s, :gp)
         g = get_grid(s)
         N = 3*prod(g.N)
-        s.gp = GainProfile(s.ω₀, s.γperp, N)
+        if ~isdefined(s, :wt)
+            s.gp = GainProfile(s.ω₀, s.γperp, N)
+        else
+            s.gp = GainProfile(s.ω₀, s.γperp, N, s.wt)
+        end
     end
 
     return s.gp
