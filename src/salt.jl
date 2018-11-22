@@ -43,8 +43,8 @@ mutable struct SALT
     εc::AbsVecComplex
 
     # Gain parameters
-    ω₀::Real
-    γperp::Real
+    ω₀::Union{Real,AbsVecReal}
+    γperp::Union{Real,AbsVecReal}
     gp::GainProfile
 
     # Gain objects
@@ -121,7 +121,7 @@ end
 
 # Below, the minus sign is introduced because MaxwellFDM assumes the exp(+iωt) time
 # dependence, whereas SALTBase assumes the exp(-iωt) time dependence.
-set_gainparam!(s::SALT, ω₀::Real, γperp::Real) = (s.ω₀ = ω₀; s.γperp = γperp; return nothing)
+set_gainparam!(s::SALT, ω₀::Union{Real,AbsVecReal}, γperp::Union{Real,AbsVecReal}) = (s.ω₀ = ω₀; s.γperp = γperp; return nothing)
 
 function get_gainprofile(s::SALT)
     if ~isdefined(s, :gp)
@@ -188,8 +188,9 @@ function get_lasingvar(s::SALT)
         g = get_grid(s)
         N = 3*prod(g.N)
         M = length(s.ωguess)
+        gp = get_gainprofile(s)
 
-        s.lvar = LasingVar(lsd, N, M)
+        s.lvar = LasingVar(lsd, N, length(gp), M)
     end
 
     return s.lvar
