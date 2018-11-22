@@ -79,6 +79,7 @@ MaxwellFDM.set_unitlen!(s::SALT, unitlen::Real) = set_unitlen!(s.m, unitlen)
 MaxwellFDM.set_bounds!(s::SALT, bounds::Tuple2{AbsVecReal}) = set_bounds!(s.m, bounds)
 MaxwellFDM.set_∆l!(s::SALT, ∆l::AbsVecReal) = set_∆l!(s.m, ∆l)
 MaxwellFDM.set_isbloch!(s::SALT, isbloch::AbsVecBool) = set_isbloch!(s.m, isbloch)
+MaxwellFDM.set_kbloch!(s::SALT, kbloch::AbsVecReal) = set_kbloch!(s.m, kbloch)
 MaxwellFDM.set_Npml!(s::SALT, Npml::Tuple2{AbsVecInteger}) = set_Npml!(s.m, Npml)
 
 MaxwellFDM.set_background!(s::SALT, matname::String, ε::MatParam) = set_background!(s.m, matname, ε)
