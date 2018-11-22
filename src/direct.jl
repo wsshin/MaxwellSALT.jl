@@ -67,14 +67,14 @@ function SALTBase.init_lsd!(lsd::DirectMaxwellData, ω::Number, ε::AbsVecNumber
 end
 
 # Later, we can store the factorization of A in DirectMaxwellData and reuse it.
-function SALTBase.linsolve!(x::AbsVecComplex, lsd::DirectMaxwellData, b::AbsVecComplex)
+function SALTBase.linsolve!(x::AbsVecComplex, lsd::DirectMaxwellData, b::AbsVecNumber)
     t = @elapsed ldiv!(x, lsd.fact, b)
     # @info "time linsolve!: $t"
 
     return nothing
 end
 
-function SALTBase.linsolve_transpose!(x::AbsVecComplex, lsd::DirectMaxwellData, b::AbsVecComplex)
+function SALTBase.linsolve_transpose!(x::AbsVecComplex, lsd::DirectMaxwellData, b::AbsVecNumber)
     t = @elapsed ldiv!(x, transpose(lsd.fact), b)
     # @info "time linsolve_transpose!: $t"
 
