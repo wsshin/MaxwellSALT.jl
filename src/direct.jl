@@ -81,8 +81,8 @@ function SALTBase.linsolve_transpose!(x::AbsVecComplex, lsd::DirectMaxwellData, 
     return nothing
 end
 
-function SALTBase.linapply!(b::AbsVecComplex, lsd::DirectMaxwellData, x::AbsVecComplex)
-    b .= lsd.A * x
+function SALTBase.linapply!(b::AbsVecComplex, lsd::DirectMaxwellData, x::AbsVecNumber)
+    mul!(b, lsd.A, x)
 
     return nothing
 end
