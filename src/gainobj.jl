@@ -5,8 +5,8 @@ export assign_pumpstr!
 # - Shape
 # - scale factor to be multiplied to the true/false array.
 #
-# Later, to put an object with a spatially changing pump strength, I will be able to define
-# a new GainObject.  Different types of GainObjects will need to define different assignment
+# Later, to put an object with a spatially changing pump strength, I could define a new
+# GainObject.  Different types of GainObjects will need to define different assignment
 # function.  Eventually, I will need to write something like MaxwellFDM's assign function
 # such that it internally uses the individual shape's assign function.  But let's not think
 # about that right now.

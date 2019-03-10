@@ -28,7 +28,7 @@ export DirectMaxwellData
 mutable struct DirectMaxwellData{MC<:AbsMatComplex,F<:FactComplex} <: LinearSolverData
     CC::MC  # double curl operator ∇ × μ⁻ ¹∇ ×
     A::MC  # Maxwell operator
-    fact::F
+    fact::F  # matrix factors of A
     function DirectMaxwellData{MC,F}(CC::AbsMatNumber, A::AbsMatNumber) where {MC<:AbsMatComplex,F<:FactComplex}
         mCC, nCC = size(CC)
         mCC==nCC || throw(ArgumentError("CC must be square."))
@@ -50,6 +50,7 @@ DirectMaxwellData(CC::MC) where {MC<:AbsMatComplex} = DirectMaxwellData{MC,FactC
 Base.similar(lsd::DirectMaxwellData) = DirectMaxwellData(lsd.CC)
 Base.size(lsd::DirectMaxwellData) = size(lsd.CC)
 
+# Factorize the matrix A and cache it.
 function SALTBase.init_lsd!(lsd::DirectMaxwellData, ω::Number, ε::AbsVecNumber)
     mA = size(lsd.A, 1)
     nε = length(ε)
@@ -66,7 +67,6 @@ function SALTBase.init_lsd!(lsd::DirectMaxwellData, ω::Number, ε::AbsVecNumber
     return nothing
 end
 
-# Later, we can store the factorization of A in DirectMaxwellData and reuse it.
 function SALTBase.linsolve!(x::AbsVecComplex, lsd::DirectMaxwellData, b::AbsVecNumber)
     t = @elapsed ldiv!(x, lsd.fact, b)
     # @info "time linsolve!: $t"
