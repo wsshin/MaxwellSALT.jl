@@ -1,7 +1,7 @@
 # Below, there are two ways to define the functions with the same names as those defined
-# in other packages, e.g., MaxwellFDM: extending the functions defined in the other packaces,
-# or calling the functions defined in the other packages by qualifying them with the package
-# names.
+# in other packages (e.g., MaxwellFDM): extending the functions defined in the other
+# packaces, or calling the functions defined in the other packages by qualifying them with
+# the package names.
 #
 # For example, for set_unitlen! below, we could define it as either
 #     MaxwellFDM.set_unitlen!(s::SALT, unitlen::Real) = set_unitlen!(s.m, unitlen)
@@ -15,15 +15,15 @@
 #
 # Which one is the right approach?
 
-# If we are extending a function that is already exported by a reexported package, I think
-# the former is better, because it explicitly specifies that we are extending the
-# capabilities of an already exported function.
+# If we are extending a function that is already exported by the present package (e.g.,
+# using reexport), I think the former is better, because it explicitly specifies that we are
+# extending the capabilities of an already exported function.
 #
-# On the other hand, if we are "extending" a function that is exported by a not-reexported
-# package (e.g., SALTBase), then we need to export the function anyway to make it available
-# to the users.  Then, we are actually not extending the capability of some function that is
-# already available to the users.  Therefore, in this case I think using the latter makes
-# more sense.
+# On the other hand, if we are "extending" a function that is exported by package (e.g.,
+# SALTBase) that is not reexported by the present package, then we need to export the
+# function anyway to make it available to the users.  Then, we are actually not extending
+# the capability of some function that is already available to the users.  Therefore, in
+# this case I think using the latter makes more sense.
 #
 # Currently, I am reexporting MaxwellFDM from the present package, but not SALTBase.  I
 # think the users may want to solve a driven Maxwell's equations, so I reexport MaxwellFDM.
@@ -145,7 +145,11 @@ end
 function get_maxwelldata(s::SALT)
     if ~isdefined(s, :lsd)
         CC = get_dblcurl(s)
-        s.lsd = DirectMaxwellData(CC)
+        Mc = get_Mc(s.m)
+        Ml = get_Ml(s.m)
+        Mr = get_Mr(s.m)
+
+        s.lsd = DirectMaxwellData(CC, Mc, Ml, Mr)
     end
 
     return s.lsd

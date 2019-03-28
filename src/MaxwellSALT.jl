@@ -12,11 +12,13 @@ const CFloat = Complex{Float}
 
 const Tuple2 = NTuple{2}
 
+const VecComplex = Vector{CFloat}
+
 const AbsVec = AbstractVector
 const AbsMat = AbstractMatrix
 
 const AbsVecBool = AbsVec{Bool}
-
+const AbsVecFloat = AbsVec{Float}
 const AbsVecComplex = AbsVec{CFloat}
 const AbsMatComplex = AbsMat{CFloat}
 
