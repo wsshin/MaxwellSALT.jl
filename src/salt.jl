@@ -96,9 +96,9 @@ MaxwellFDM.add_obj!(s::SALT, matname::String, ε::MatParam, shapes::AbsVec{<:Sha
 # is why we use the conjugated frequency ω_phy = conj(ω_eng) in SALT.
 #
 # The PML formula is embedded inside Maxwell's equations, so it is also affected by the
-# conjugation.  It turns out that i appears only in the form of iω_eng, and all the other PML
-# parameters except for ω_eng are real.  Therefore, the PML formula for SALT is obtained by
-# using -i instead of i and conj(ω_eng) instead of ω_eng.
+# conjugation.  It turns out that i appears only in the form of i ω_eng, and all the other
+# PML parameters except for ω_eng are real.  Therefore, the PML formula for SALT is obtained
+# by using -i instead of i and conj(ω_eng) instead of ω_eng.
 #
 # In SALT, we are already using conj(ω_eng) = ω_phy, so we only need to flip the sign of i
 # in order to optain the PML formula for the SALT equation.  Because i appears only in the
