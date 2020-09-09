@@ -41,4 +41,4 @@ include("direct.jl")
 include("gainobj.jl")
 include("salt.jl")
 
-end # module
+end # module MaxwellSALT
