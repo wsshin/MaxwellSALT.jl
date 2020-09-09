@@ -16,9 +16,10 @@ notifications:
 script:
  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
  - julia -e 'using Pkg;
-             Pkg.clone("https://github.com/stevengj/GeometryPrimitives.jl.git");
-             Pkg.clone("https://github.com/wsshin/SALTBase.jl.git");
-             Pkg.clone("https://github.com/wsshin/MaxwellFDM.jl.git");
+             Pkg.clone("https://github.com/wsshin/StaggeredGridCalculus.jl");
+             Pkg.clone("https://github.com/stevengj/GeometryPrimitives.jl");
+             Pkg.clone("https://github.com/wsshin/MaxwellFDM.jl");
+             Pkg.clone("https://github.com/wsshin/SALTBase.jl");
              Pkg.clone(pwd()); Pkg.build("MaxwellSALT"); Pkg.test("MaxwellSALT"; coverage=true)'
 after_success:
   # push coverage results to Coveralls
