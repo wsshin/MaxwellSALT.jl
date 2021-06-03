@@ -1,0 +1,18 @@
+name = "MaxwellSALT"
+uuid = "af179572-5b27-49bb-a7da-7163b0e709f2"
+authors = ["Wonseok Shin <wsshin97@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+MaxwellWave = "9ee19b4e-b9c3-5130-be0e-e5859ba17e49"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+SALTBase = "265b7df6-2be8-4c25-b607-723db51099b1"
+
+[compat]
+julia = "^1.5"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
